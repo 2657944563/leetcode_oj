@@ -91,6 +91,7 @@ public class shejimos {
     public static void main(String[] args) {
 
 //        System.out.println(-1 >>> 1 >> 8 * 3 + 7);
+        String
         System.out.println(Integer.MAX_VALUE);
         System.out.println(Integer.MIN_VALUE);
         int a1 = 1 << 31;
