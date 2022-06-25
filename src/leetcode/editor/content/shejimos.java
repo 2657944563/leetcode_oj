@@ -3,6 +3,7 @@ package content;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -81,7 +82,7 @@ class SubstringSearch {
 }
 
 @Slf4j
-@SpringBootConfiguration
+@SpringBootApplication
 public class shejimos {
     static int l = 0;
     static int wei(int a) {
