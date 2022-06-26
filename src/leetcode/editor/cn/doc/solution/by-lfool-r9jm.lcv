@@ -1,0 +1,151 @@
+# [如果想要查看作者更多文章，可以点击此处！！！🔥🔥🔥](https://lfool.github.io/LFool-Notes/)
+
+# [为了本篇文章更好的观感，可以点击此处！！！](https://lfool.github.io/LFool-Notes/algorithm/常数时间删除-查找数组中的任意元素.html)
+
+[380. O(1) 时间插入、删除和获取随机元素](https://leetcode-cn.com/problems/insert-delete-getrandom-o1/)
+
+[710. 黑名单中的随机数](https://leetcode-cn.com/problems/random-pick-with-blacklist/)
+
+## 提出思路
+
+简单的梳理一下，对于「删除」「查找」「插入」操作，不同的数据结构的时间复杂度
+
+|            |  删除  |  查找  |  插入  |
+| :--------: | :----: | :----: | :----: |
+|    数组    |  O(n)  |  O(n)  |  O(1)  |
+|  有序数组  |  O(n)  | O(lgn) |  O(n)  |
+|    链表    |  O(n)  |  O(n)  |  O(1)  |
+|  有序链表  |  O(n)  |  O(n)  |  O(n)  |
+| 二叉树最坏 |  O(n)  |  O(n)  |  O(n)  |
+| 二叉树一般 |  O(n)  |  O(n)  |  O(n)  |
+|   平衡树   | O(lgn) | O(lgn) | O(lgn) |
+|   哈希表   |  O(1)  |  O(1)  |  O(1)  |
+
+如果要实现常数时间复杂度内的操作，仅仅使用单个数据结构满足不了我们的需求
+
+下面提供一种思路「**当我们需要删除某一个元素的时候，快速获取该元素的下标 index，然后把该元素和 List 中最后一个元素交换，最后删除 List 最后一个元素即可**」
+
+把要删除的元素和最后一个元素交换，免去了移动删除元素后的所有元素
+
+如何快速获得删除元素的下标呢？？？ --> `Map<value, index>`
+
+**小技巧**：如果要等概率的随机获取一个元素，那么可被选择的元素必须是连续存储，然后调用 `random.nextInt(n)`，随机等概率生成 `[0, n)` 内的一个数。**更多关于 `Random` 的用法可见 [Random 类](https://lfool.github.io/LFool-Notes/java/Random.html)**
+
+## O(1) 时间插入、删除和获取随机元素
+
+**题目详情可见 [O(1) 时间插入、删除和获取随机元素](https://leetcode-cn.com/problems/insert-delete-getrandom-o1/)**
+
+直接给出详细代码：(结合注释看 👀)
+
+* java
+
+```java
+class RandomizedSet {
+
+    List<Integer> list;
+    Map<Integer, Integer> valToIndex;
+    Random random;
+
+    public RandomizedSet() {
+        list = new ArrayList<>();
+        valToIndex = new HashMap<>();
+        random = new Random();
+    }
+    
+    public boolean insert(int val) {
+        // 如果已经存在，返回
+        if (valToIndex.containsKey(val)) return false;
+        list.add(val);
+        // 维护 val -> index 的映射
+        valToIndex.put(val, list.size() - 1);
+        return true;
+    }
+    
+    public boolean remove(int val) {
+        // 如果不存在，返回
+        if (!valToIndex.containsKey(val)) return false;
+        // 获得 list 中需要删除的元素的下标
+        int index = valToIndex.get(val);
+        // 获得最后一个元素
+        int last = list.get(list.size() - 1);
+        // 把 list 中最后一个元素和需要删除的元素交换
+        list.set(index, last);
+        // 更改交换元素的下标对应关系
+        valToIndex.put(last, index);
+        // 删除 list 最后一个元素
+        list.remove(list.size() - 1);
+        // 删除 valToIndex key 为 val 的元素
+        valToIndex.remove(val);
+        return true;
+    }
+    
+    public int getRandom() {
+        return list.get(random.nextInt(list.size()));
+    }
+}
+```
+
+## 黑名单中的随机数
+
+**题目详情可见 [黑名单中的随机数](https://leetcode-cn.com/problems/random-pick-with-blacklist/)**
+
+对于例子：`n = 10, blacklist = [3, 5, 8, 9]`
+
+我们的思路就是利用 `Map` 把 `blacklist` 中的元素全部映射到最后面去，即 `[0, 6)` 存放非黑名单内的元素，`[6, 10)` 存放黑名单内的元素
+
+需要注意的一点是：**我们并非真正意义上的把元素移到最后，而是通过 `Map` 映射，其实元素的位置是没有改变的**
+
+![15005116497468516yAUzOimage-20220412150050973.png](https://pic.leetcode-cn.com/1649748008-lKragA-15005116497468516yAUzOimage-20220412150050973.png){:height="50%" width="50%"}
+
+如上图所示，元素 3 和 5 在非黑名单位置上，所以我们需要按序把这两个元素映射到 7 和 6，即 `map.put(3, 7); map.put(5, 6)`
+
+而我们随机获得非黑名单内的元素，直接对区间`[0, 6)`随机即可。如果刚好随机到了 3 或 5，那么我们只需要返回 `map.get(3) = 7 or map.get(5) = 6` 即可
+
+`pick()` 实现代码如下：
+
+* java
+
+```java
+int sz = n - blacklist.length;
+Random random = new Random();
+public int pick() {
+    int index = random.nextInt(sz);
+    if (map.containsKey(index)) {
+        return map.get(index);
+    }
+    return index;
+}
+```
+
+**那如何构造上述的映射呢？？？**
+
+直接给出详细代码：(结合注释看 👀)
+
+* java
+
+```java
+Map<Integer, Integer> map = new HashMap<>();
+// [0, sz) 存放非黑名单的元素
+// [sz, n) 存放黑名单的元素
+int sz = n - blacklist.length;
+public Solution(int n, int[] blacklist) {
+    // 首先为每一个黑名单内的元素占一个坑
+    for (int b : blacklist) {
+        map.put(b, -1);
+    }
+    // 从 [sz, n) 的最后一个元素开始往前存放
+    int last = n - 1;
+    for (int b : blacklist) {
+        // b in [0, sz)
+        if (b < sz) {
+            // 如果在 [sz, n) 中已经有黑名单内的元素，即向前移动一步
+            // 这就是上述占坑的作用
+            while (map.containsKey(last)) last--;
+            // 映射
+            map.put(b, last);
+            last--;
+        }
+    }
+}
+```
+
