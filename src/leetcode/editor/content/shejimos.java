@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -84,21 +85,28 @@ class SubstringSearch {
 @Slf4j
 @SpringBootApplication
 public class shejimos {
-    static int l = 0;
-    static int wei(int a) {
-        a = (a << 1) + 1;
-        return a < 0 ? a >>> 1 : wei(a);
-    }
+    //    static int l = 0;
+//    static int wei(int a) {
+//        a = (a << 1) + 1;
+//        return a < 0 ? a >>> 1 : wei(a);
+//    }
     public static void main(String[] args) {
-
+        UUID uid = UUID.randomUUID();
+        UUID uid1 = UUID.nameUUIDFromBytes("https://www.baidu.com/seacher".getBytes());
+        System.out.println(uid.toString());
+        System.out.println(uid.toString());
+        System.out.println(uid1.toString());
+        System.out.println(uid1.toString().substring(0, 8));
+//        System.out.println("https://www.baidu.com/seacher);
+//
 //        System.out.println(-1 >>> 1 >> 8 * 3 + 7);
-
-        System.out.println(Integer.MAX_VALUE);
-        System.out.println(Integer.MIN_VALUE);
-        int a1 = 1 << 31;
-        int a2 = (1 << 31) + 1;
-        System.out.println(1 << 31);
-        System.out.println(wei(1));
+//
+//        System.out.println(Integer.MAX_VALUE);
+//        System.out.println(Integer.MIN_VALUE);
+//        int a1 = 1 << 31;
+//        int a2 = (1 << 31) + 1;
+//        System.out.println(1 << 31);
+//        System.out.println(wei(1));
 //        String a = "aabaaabaaac";
 //        String flag = "aabaaac";
 //
