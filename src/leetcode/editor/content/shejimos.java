@@ -1,5 +1,6 @@
 package content;
 
+import ch.qos.logback.core.util.SystemInfo;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -92,12 +93,13 @@ public class shejimos {
 //        return a < 0 ? a >>> 1 : wei(a);
 //    }
     public static void main(String[] args) {
-        Integer i = 1;
-        Integer l = 2;
-        ThreadLocal t = new ThreadLocal();
-        t.set(i);
-        t.set(l);
-        System.out.println(t.get());
+
+//        Integer i = 1;
+//        Integer l = 2;
+//        ThreadLocal t = new ThreadLocal();
+//        t.set(i);
+//        t.set(l);
+//        System.out.println(t.get());
 
 //        UUID uid = UUID.randomUUID();
 //        UUID uid1 = UUID.nameUUIDFromBytes("https://www.baidu.com/seacher".getBytes());
