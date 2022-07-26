@@ -10,22 +10,19 @@ import java.util.LinkedList;
 class CBTInserter {
     LinkedList<TreeNode> queue = new LinkedList<>();
     TreeNode root;
-
     public CBTInserter(TreeNode root) {
-        LinkedList<TreeNode> tempList = new LinkedList<>();
-        tempList.add(root);
-        while (!tempList.isEmpty()) {
-            TreeNode poll = tempList.peek();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            TreeNode poll = queue.peek();
             if (poll.left != null) {
-                tempList.add(poll.left);
+                queue.add(poll.left);
             }
             if (poll.right != null) {
-                tempList.add(poll.right);
-                tempList.poll();
+                queue.add(poll.right);
+                queue.poll();
             }
             if (poll.left == null || poll.right == null) {
                 // 转换
-                queue.addAll(tempList);
                 break;
             }
         }
