@@ -1,0 +1,27 @@
+* 
+
+```
+var convert = function(s, numRows) {
+    if(numRows <= 1) return s
+    const matrix = new Array(numRows).fill('')
+    let i=0,j=0
+    let rev = false
+    while(i < s.length){
+        matrix[j] += s[i]
+        if(rev){
+            j--
+        }else{
+            j++
+        }
+        if(j === numRows-1) rev = true
+        if(j === 0) rev = false
+        i++
+    }
+    let str = ''
+    for(let i=0; i<numRows; i++){
+        str += matrix[i]
+    }
+    return str
+};
+```
+

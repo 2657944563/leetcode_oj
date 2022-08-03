@@ -1,0 +1,161 @@
+> 此专栏文章是对力扣上算法题目**各种方法**的**总结和归纳**, 整理出最重要的思路和知识重点并以**思维导图**形式呈现, 当然也会加上我对**导图的详解**.
+>
+> **目的是**为了更方便快捷的**记忆和回忆算法重点**\(不用每次都重复看题解\), 毕竟算法不是做了一遍就能完全记住的. 所以本文适合已经知道解题思路和方法, 想进一步**加强理解和记忆**的朋友, 并不适合第一次接触此题的朋友\(可以根据题号先去力扣看看官方题解, 然后再看本文内容\).
+>
+> 关于[本专栏**所有题目**的目录链接](https://leetcode-cn.com/problems/two-sum/solution/suo-you-ti-jie-de-mu-lu-lian-jie-si-wei-ecnoo/), 刷算法题目的顺序/注意点/技巧, 以及**思维导图源文件**问题请点击上方 [我的主页](https://leetcode-cn.com/u/gu-xx-qi/).
+>
+> 想进大厂, 刷算法是必不可少的, 欢迎和博主一起打卡刷力扣算法, 博主同步更新了算法视频讲解 和 其他文章/导图讲解, 更易于理解, 欢迎来看!
+>
+> **关注博主获得题解更新的最新消息!!!**
+
+## 0.导图整理
+
+![image.png](https://pic.leetcode-cn.com/1636099950-ukxwgD-image.png)
+
+## 1.和 三数之和 的相同点
+
+原本在整理 n数之和 系列时是没有整理此题的, 后来在重看 三数之和 时, 发现了这样的评论: **百度一面题目: 找三数和最接近0**, 只要将此题中的**target设置0**即可, 所以又重新补充了此题!
+
+本题是 [三数之和](https://mp.weixin.qq.com/s/LqwK83EVZ7Xim44lHATXuA) 的进阶版, **在思想上和 三数之和 还是很相似的**: 先对**数组进行排序**, 之后用**双指针进行空间优化**, 同时注意**去重操作**. 本质的思想几乎是一样的, 所以对本题不太理解的朋友, 可以先看完上面链接中的 三数之和, 再来看本题题解.
+
+但还是有一些和 三数之和 **不同的地方**, 主要体现在下面的**两个方面**:
+
+## 2.判断的情况不同
+
+在 三数之和 中**只需要判断相等这一种情况**, 其他情况不需要判断, 操作起来是非常简便的, 而本题中**每次求和之后都需要进行判断**(无论是相等, 还是大于或小于的情况)来找出最接近的数, 这大大增加需要进行判断的工作量, 所以在代码的写法上也有很大的不同之处.
+
+## 3.去重的方式不同
+
+因为 三数之和 **没那么多的判断情况**, 所以**利用了两层for循环来遍历**, **去重的操作也比较简单**.
+
+* python
+
+```python
+for first in range(n):
+    # 需要和上一次枚举的数不相同
+    if first > 0 and nums[first] == nums[first - 1]:
+        continue
+    ......
+    # 枚举 b
+    for second in range(first + 1, n):
+        # 需要和上一次枚举的数不相同
+        if second > first + 1 and nums[second] == nums[second - 1]:
+            continue
+```
+
+而本题中判断情况比较多, **不方便使用两重for循环**(我也尝试了使用二重循环, 但发现在**去重时候非常复杂**, 不适合使用此种方法), 所以采用了**while语句来进行双指针的遍历**, 这样在去重操作上会简便很多, 并且代码中实现的**去重方式比官方的要简单**, 而且更方便进行记忆!
+
+* python
+
+```python
+if s > target:
+        # 如果和大于 target，移动 c 对应的指针
+        k -= 1
+        # 移动到下一个不相等的元素
+        while j < k and nums[k] == nums[k+1]:
+            k -= 1
+```
+
+## 4.最大最小值优化
+
+可以计算出**每次三数之和的最大最小值和目标值进行比较**, 也可以进行优化, 其实这种方法早在之前讲解的 [四数之和](https://mp.weixin.qq.com/s/pROKbDAGvBvSPKpC0dm7TA) 中就已经提到了, 但**每次都计算也增加了时间消耗**, 在 四数之和 中还有很有优化的必要的, 但是在 三数之和 中是否也适用就要看具体的情况了!
+
+## 源码
+
+### Python:
+
+* python
+
+```python
+class Solution:
+    def threeSumClosest(self, nums: List[int], target: int) -> int:
+        nums.sort()
+        n = len(nums)
+        best = 10**7
+
+
+        # 枚举 a
+        for i in range(n):
+            # 保证和上一次枚举的元素不相等
+            if i > 0 and nums[i] == nums[i - 1]:
+                continue
+            # 使用双指针枚举 b 和 c
+            j, k = i + 1, n - 1
+            while j < k:
+                s = nums[i] + nums[j] + nums[k]
+                # 如果和为 target 直接返回答案
+                if s == target:
+                    return target
+                # 根据差值的绝对值来更新答案
+                if abs(s - target) < abs(best - target):
+                    best = s
+                if s > target:
+                    # 如果和大于 target，移动 c 对应的指针
+                    k -= 1
+                    # 移动到下一个不相等的元素
+                    while j < k and nums[k] == nums[k+1]:
+                        k -= 1
+                else:
+                    # 如果和小于 target，移动 b 对应的指针
+                    j += 1
+                    # 移动到下一个不相等的元素
+                    while j < k and nums[j] == nums[j-1]:
+                        j += 1
+
+
+        return best
+```
+
+### java:
+
+* java
+
+```java
+class Solution {
+    public int threeSumClosest(int[] nums, int target) {
+        Arrays.sort(nums);
+        int n = nums.length;
+        int best = 10000000;
+
+
+        // 枚举 a
+        for (int i = 0; i < n; ++i) {
+            // 保证和上一次枚举的元素不相等
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            // 使用双指针枚举 b 和 c
+            int j = i + 1, k = n - 1;
+            while (j < k) {
+                int sum = nums[i] + nums[j] + nums[k];
+                // 如果和为 target 直接返回答案
+                if (sum == target) {
+                    return target;
+                }
+                // 根据差值的绝对值来更新答案
+                if (Math.abs(sum - target) < Math.abs(best - target)) {
+                    best = sum;
+                }
+                if (sum > target) {
+                    // 如果和大于 target，移动 c 对应的指针
+                    --k;
+                    // 移动到下一个不相等的元素
+                    while (j < k && nums[k] == nums[k+1]) {
+                        --k;
+                    }
+                } else {
+                    // 如果和小于 target，移动 b 对应的指针
+                    ++j;
+                    // 移动到下一个不相等的元素
+                    while (j < k && nums[j] == nums[j-1]) {
+                        ++j;
+                    }
+                }
+            }
+        }
+        return best;
+    }
+}
+```
+
+![](https://pic.leetcode-cn.com/1630829429-vjIBwS-1a3872e5-79d8-49fc-940b-0258d48b8f61.gif)

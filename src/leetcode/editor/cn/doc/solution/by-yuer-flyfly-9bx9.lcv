@@ -1,0 +1,111 @@
+### 解题思路
+
+**贪心想法**:
+每次把当前集合中最有可能落入后续集合的元素加入$S$，需要注意$S$不一定是区间，只是点集.
+
+**对于区间如何排序，有两种方式**
+- 第一种：按照左端点从大到小排序，从前到后遍历
+  为了保证代码中的3.2和3.3这两步中可以推导出 $left<a$，进而说明$a$落入当前区间
+  如果是“左端点从小到大排序+从前到后遍历”，那么按照贪心思想，应该先纳入前序集合的右端点，但是前序集合的右端点不一定落入后序集合中（后序集合的左端点>前序集合的右端点时).
+- 第二种：按照右端点从小到大排序，从前到后遍历
+  和上面的讨论一样道理，也不可以“按照右端点从大到小排序，从前到后遍历“
+- 自己在做的时候只想到了按左端点从小到大排序 所以做了半天还是不对 >_< 因为如果顺序不对 那么S的获取不是嵌套的 也就是早先纳入的点不一定落在后面的集合中
+
+**另外的小细节**
+- 按照左端点从大到小排序时，如果左端点相同，我们只需要选取右端点最小的集合. 因为落在小区间的点一定落在更大的区间中.
+- 按照右端点从小到大排序时，如果右端点相同，我们只需要选取左端点最大的集合. 因为落在小区间的点一定落在更大的区间中.
+- 代码中对应着计算 ``intervals_small``
+
+### 代码
+
+#### 第一种：按照左端点从大到小排序，从前到后遍历
+
+* python3
+
+```python3
+def intersectionSizeTwo(intervals: List[List[int]]) -> int:        
+    if len(intervals)==1: return 2
+    # 1. 对区间排序，按照左端点降序 
+    intervals = sorted(intervals, key = lambda x:(-x[0],x[1])) 
+
+    # 2. 左端点相同的情况下 只保留右端点最小的
+    # intervals_small = [[a1, b1], ... ,[ak, bk]] a1<a2<...<ak
+    intervals_small = [intervals[0]]
+    for i in range(1, len(intervals)):
+        if intervals[i][0]==intervals_small[-1][0]: continue
+        intervals_small.append(intervals[i])
+    # print('intervals_small={}'.format(intervals_small))
+
+    # 3. 从头到尾得到集合S
+    # a=intervals_small[0][0] 和 b=intervals_small[0][0]+1 
+    # a < b 是区间intervals_small[0]中最可能落在后续集合的数字, 因此纳入到S中
+    a, b = intervals_small[0][0], intervals_small[0][0]+1
+    cnt = 2
+    for i in range(1, len(intervals_small)):
+        left, right = intervals_small[i][0], intervals_small[i][1]
+        # 3.1 if right < a, 说明当前集合S中没有数字落在区间intervals_small[i]中 
+        # 需要从intervals_small[i]中添加两个新元素
+        # 与此前同理left, left+1 是intervals_small[i]中最可能落在后续集合的数字
+        if right < a:
+            a, b = left, left+1
+            cnt += 2
+        # 3.2 if a<=right<b, 因为left<a 
+        # 这是因为a是前面某个集合的左端点or左端点+1，必定大于当前的左端点left
+        # 所以 left<a<=right<b 所以 a落在当前区间中, 只需要添加一个元素 left
+        elif a<=right<b:
+            a, b = left, a
+            cnt += 1
+        # 3.3 if right>=b, then left<a<b<=right, {a,b}均落在当前区间
+        elif right>=b:
+            pass
+
+    return cnt
+
+```
+
+#### 第二种：按照右端点从小到大排序，从前到后遍历
+
+* python
+
+```python
+def intersectionSizeTwo(intervals: List[List[int]]) -> int:        
+    if len(intervals)==1: return 2
+    # 1. 对区间排序，按照右端点从小到大
+    intervals = sorted(intervals, key = lambda x:(x[1],-x[0])) 
+
+    # 2. 右端点相同的情况下 只保留左端点最大的
+    # intervals_small = [[a1, b1], ... ,[ak, bk]] a1<a2<...<ak
+    intervals_small = [intervals[0]]
+    for i in range(1, len(intervals)):
+        if intervals[i][0]==intervals_small[-1][0]: continue
+        intervals_small.append(intervals[i])
+    # print('intervals_small={}'.format(intervals_small))
+
+    # 3. 从头到尾得到集合S
+    # a=intervals_small[0][1]-1 和 b=intervals_small[0][1]
+    # a<b 是区间intervals_small[0]中最大的元素，是最可能落在后续集合的数字, 因此纳入到S中
+    a, b = intervals_small[0][1]-1, intervals_small[0][1]
+    cnt = 2
+    for i in range(1, len(intervals_small)):
+        left, right = intervals_small[i][0], intervals_small[i][1]
+        # if a<b<left, 说明当前集合S中没有数字落在区间intervals_small[i]中 
+        # 需要从intervals_small[i]中添加两个新元素
+        # 与此前同理 right-1, right 是intervals_small[i]中最可能落在后续集合的数字
+        if left > b:
+            a, b = right-1, right
+            cnt += 2
+        # if a<left<=b, 因为 right>b (b是前面某个集合的右端点 or 右端点+1，必定大于当前的右端点)
+        # 所以 a<left<=b<right 所以 b落在当前区间中, 只需要添加一个元素 left
+        elif a<left<=b:
+            a, b = b, right
+            cnt += 1
+        # if left<=a, then left<=a<b<right, {a,b}均落在当前区间
+        elif left<=a:
+            pass
+
+    return cnt
+            
+
+                
+```
+
