@@ -1,4 +1,6 @@
 import java.util.*;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 /*
 数组中的字符串匹配
@@ -24,4 +26,52 @@ class Solution {
         return list;
     }
 }
+
+interface text {
+    int a = 0;
+
+    private void a() {
+        System.out.println("1");
+    }
+
+    ;
+
+    default void b() {
+        System.out.println(2);
+    }
+}
+
+abstract class abst {
+    private static final int a = 1;
+
+    public void ab() {
+        System.out.println(1);
+
+    }
+
+    void bc() {
+        System.out.println(1);
+
+    }
+
+    abstract void te();
+
+};
+
+class A {
+    public void t() {
+        ArrayList<Integer> integers = new ArrayList<>();
+        final Iterator<Integer> iterator = integers.iterator();
+        iterator.
+    }
+}
+
+class B extends A {
+
+    @Override
+    public void t() {
+
+    }
+}
+
 //leetcode submit region end(Prohibit modification and deletion)
