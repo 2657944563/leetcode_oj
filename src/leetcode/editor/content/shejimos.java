@@ -93,6 +93,7 @@ public class shejimos {
 //        return a < 0 ? a >>> 1 : wei(a);
 //    }
     public static void main(String[] args) {
+        System.out.println(0 % 2);
 
 //        Integer i = 1;
 //        Integer l = 2;

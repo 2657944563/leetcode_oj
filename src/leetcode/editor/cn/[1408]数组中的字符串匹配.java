@@ -62,7 +62,7 @@ class A {
     public void t() {
         ArrayList<Integer> integers = new ArrayList<>();
         final Iterator<Integer> iterator = integers.iterator();
-        iterator.
+//        iterator.
     }
 }
 
