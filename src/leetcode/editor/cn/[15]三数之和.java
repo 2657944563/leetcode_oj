@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /*
@@ -12,16 +9,13 @@ import java.util.stream.Collectors;
 //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
     public List<List<Integer>> threeSum(int[] nums) {
-        List<List<Integer>> res = new LinkedList<>();
+        HashSet<List<Integer>> res = new HashSet<>();
         Arrays.sort(nums);
-//        System.out.println(Arrays.toString(nums));
         int n = 1;
         int l = 0, r = 2, temp;
         while (n <= nums.length - 1) {
             while (l >= 0 && r < nums.length) {
                 temp = nums[l] + nums[r] + nums[n];
-//                System.out.println(temp);
-//                System.out.println(String.format("%d,%d,%d", nums[l], nums[r], nums[n]));
                 if (temp == 0) {
                     ArrayList<Integer> integers = new ArrayList<>();
                     integers.add(nums[l]);
@@ -44,7 +38,7 @@ class Solution {
             l = n - 1;
             r = n + 1;
         }
-        return res.stream().distinct().collect(Collectors.toList());
+        return new ArrayList<>(res);
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
