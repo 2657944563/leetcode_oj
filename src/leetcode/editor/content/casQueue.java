@@ -2,17 +2,37 @@ package content;
 
 import lombok.Data;
 import sun.misc.Unsafe;
+
+import java.io.*;
 import java.lang.reflect.Field;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class casQueue {
     public static void main(String[] args) {
-        final NoLockQueue noLockQueue = new NoLockQueue();
-        noLockQueue.enQueue(1);
-        noLockQueue.enQueue(1);
-        noLockQueue.enQueue(1);
-        noLockQueue.enQueue(1);
-        noLockQueue.dequeue();
+
+        String filePath = "D:/1.txt";
+        String outputFilePath = "D:/1_modified.txt";
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath));
+             BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line += ",";
+                writer.write(line);
+                writer.newLine();
+            }
+
+            System.out.println("文件内容修改完成。");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        final NoLockQueue noLockQueue = new NoLockQueue();
+//        noLockQueue.enQueue(1);
+//        noLockQueue.enQueue(1);
+//        noLockQueue.enQueue(1);
+//        noLockQueue.enQueue(1);
+//        noLockQueue.dequeue();
     }
 }
 class NoLockQueue {
