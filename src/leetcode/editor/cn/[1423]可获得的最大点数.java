@@ -1,3 +1,6 @@
+import java.util.LinkedList;
+import java.util.List;
+
 /*
 可获得的最大点数
 1423
@@ -6,19 +9,19 @@
 //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
     public int maxScore(int[] cardPoints, int k) {
-        if (cardPoints.length == 1) {
-            return cardPoints[0];
+        List<Integer> list = new LinkedList<>();
+        int n = cardPoints.length - k, result = 0, min = Integer.MAX_VALUE, tmin = 0;
+        for (int i = 0; i < cardPoints.length; i++) {
+            result += cardPoints[i];
+            tmin = i + n <= cardPoints.length ? 0 : tmin;
+            for (int j = i; j < i + n && i + n <= cardPoints.length; j++) {
+                tmin += cardPoints[j];
+                list.add(cardPoints[j]);
+            }
+            min = Math.min(min, tmin);
         }
-        return Math.max(rac(cardPoints, 1, cardPoints.length - 1, k - 1, cardPoints[0]),
-                rac(cardPoints, 0, cardPoints.length - 2, k - 1, cardPoints[cardPoints.length - 1]));
+        return result - min;
     }
 
-    int rac(int[] cardPoints, int l, int r, int n, int sum) {
-        if (l > r || r < 0 || n == 0) {
-            return sum;
-        }
-        return Math.max(rac(cardPoints, l + 1, r, n - 1, sum + cardPoints[l]),
-                rac(cardPoints, l, r - 1, n - 1, sum + cardPoints[r]));
-    }
 }
 //leetcode submit region end(Prohibit modification and deletion)
