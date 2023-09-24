@@ -1,5 +1,5 @@
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /*
 LRU 缓存
@@ -7,37 +7,25 @@ LRU 缓存
 2023-09-15 18:05:11
 */
 //leetcode submit region begin(Prohibit modification and deletion)
-class LRUCache {
+class LRUCache extends LinkedHashMap<Integer, Integer> {
     int capacity;
-    LinkedList<Integer> list;
-    HashMap<Integer, Integer> hashMap;
 
     public LRUCache(int capacity) {
+        super(capacity, 0.75f, true);
         this.capacity = capacity;
-        hashMap = new HashMap<>(capacity * 2);
-        list = new LinkedList<>();
     }
 
     public int get(int key) {
-        Integer integer = hashMap.get(key);
-        if (integer != null) {
-            list.remove(Integer.valueOf(key));
-            list.addFirst(key);
-            return integer;
-        }
-        return -1;
+        return super.getOrDefault(key, -1);
     }
 
     public void put(int key, int value) {
-        Integer put = hashMap.put(key, value);
-        if (hashMap.size() > capacity) {
-            Integer listKey = list.removeLast();
-            hashMap.remove(listKey);
-        }
-        if (put != null) {
-            list.remove(Integer.valueOf(key));
-        }
-        list.addFirst(key);
+        super.put(key, value);
+    }
+
+    @Override
+    protected boolean removeEldestEntry(Map.Entry<Integer, Integer> eldest) {
+        return size() > capacity;
     }
 }
 
