@@ -4,8 +4,6 @@
 // 题目编号：518
 // 题目描述：
 
-import java.util.Arrays;
-
 /**
  * 给你一个整数数组 coins 表示不同面额的硬币，另给一个整数 amount 表示总金额。
  * <p>
@@ -69,7 +67,6 @@ class Solution {
             for (int i = 0; i <= amount; i++) {
                 if (i >= coin) {
                     dp[i] += dp[i - coin];
-                    System.out.println(Arrays.toString(dp));
                 }
             }
         }
