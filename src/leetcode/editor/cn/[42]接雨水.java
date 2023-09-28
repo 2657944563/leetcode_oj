@@ -1,3 +1,5 @@
+import java.util.Stack;
+
 /*
 接雨水
 42
@@ -6,6 +8,21 @@
 //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
     public int trap(int[] height) {
+        int leftMax = 0, rightMax = 0, left = 0, right = height.length - 1, sum = 0;
+        while (left <= right) {
+            if (leftMax < rightMax) {
+                leftMax = Math.max(leftMax, height[left]);
+                sum += leftMax - height[left++];
+            } else {
+                rightMax = Math.max(rightMax, height[right]);
+                sum += rightMax - height[right--];
+            }
+        }
+        return sum;
+    }
+
+    // 栈解
+    int stackF(int[] height) {
         int sum = 0;
         Stack<Integer> stack = new Stack<>();
         int current = 0;
