@@ -76,14 +76,15 @@ class MyHashSet {
                 integers.add(key);
             }
         }
+        count++;
 
     }
 
     public void remove(int key) {
         int h = key % size;
         LinkedList<Integer> integers = hash[h];
-        if (integers != null && integers.contains(key)) {
-            integers.remove((Integer) key);
+        if (integers != null && integers.remove((Integer) key)) {
+            count--;
         }
     }
 
@@ -106,19 +107,26 @@ class MyHashSet {
     void reIndex(LinkedList<Integer>[] newHash) {
         int h;
         for (LinkedList<Integer> integers : hash) {
-            for (Integer integer : integers) {
+            if (integers == null || integers.isEmpty()) {
+                continue;
+            }
+            for (int i = 0; i < integers.size(); i++) {
+                Integer integer = integers.get(i);
                 h = integer % size;
+
                 LinkedList<Integer> list = newHash[h];
+
                 if (list == null) {
                     LinkedList<Integer> newList = new LinkedList<>();
                     newList.add(integer);
                     newHash[h] = newList;
                 } else {
-                    list.add(h);
+                    if (!list.contains(integer)) {
+                        list.add(integer);
+                    }
                 }
             }
         }
-
     }
 }
 
