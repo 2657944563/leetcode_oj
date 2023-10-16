@@ -1,0 +1,1 @@
+select score,(select count(distinct(B.score))from Scores B where B.score>=A.score)AS'Rank'from Scores A order by score desc;
